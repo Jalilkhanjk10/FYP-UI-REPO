@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INFOCAM - AI CCTV Surveillance</title>
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- CSS File -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ================= LOGIN SECTION ================= -->
+    <section id="login-section">
+        <div class="login-box">
+            <div class="login-header">
+                <i class="fas fa-eye"></i>
+                <h1>INFOCAM</h1>
+            </div>
+            <div class="login-title">WELCOME BACK</div>
+            <div class="login-subtitle">Sign in to access your AI surveillance dashboard</div>
+            
+            <form id="loginForm">
+                <div class="input-group">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" class="input-field" placeholder="Username or Email" value="admin@DemoCompany.io" name="username" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" class="input-field" placeholder="Password" value="123456" name="password" required>
+                    <i class="fas fa-eye-slash toggle-password" id="togglePassword"></i>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="rememberMe">
+                    <label for="rememberMe">Remember me</label>
+                </div>
+                <button type="submit" class="btn-submit">
+                    <span>Sign In</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <a href="#" class="forgot-password">Forgot Password?</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= DASHBOARD SECTION ================= -->
+    <section id="dashboard-section">
+        
+        <!-- LEFT SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Logo -->
+            <div class="sidebar-logo">
+                <i class="fas fa-eye"></i>
+                <span class="logo-text">INFOCAM</span>
+            </div>
+            
+            <ul class="nav-links">
+                <!-- Dashboard Link -->
+                <li class="nav-item">
+                    <a href="#" class="active" onclick="showDashboard()">
+                        <i class="fas fa-th-large icon-left"></i>
+                        <span class="link-text">Dashboard</span>
+                    </a>
+                </li>
+
+                <!-- Live Cameras Dropdown -->
+                <li class="nav-item">
+                    <a href="#" id="cameraDropdownLink">
+                        <i class="fas fa-video icon-left"></i>
+                        <span class="link-text">Live Cameras</span>
+                        <i class="fas fa-chevron-right icon-arrow" id="camArrow"></i>
+                    </a>
+                    <!-- Submenu - BACKEND: Populate this dynamically from /cameras endpoint -->
+                    <ul class="sub-menu" id="cameraSubMenu">
+                        <li><a href="#" onclick="loadCamera(1, 'Camera 01')">Camera 01</a></li>
+                        <li><a href="#" onclick="loadCamera(2, 'Camera 02')">Camera 02</a></li>
+                        <li><a href="#" onclick="loadCamera(3, 'Camera 03')">Camera 03</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="#" onclick="showViolations()">
+                        <i class="fas fa-exclamation-triangle icon-left"></i>
+                        <span class="link-text">Violations</span>
+                        <i class="fas fa-chevron-right icon-arrow"></i>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" onclick="showAnalytics()">
+                        <i class="fas fa-chart-line icon-left"></i>
+                        <span class="link-text">Analytics</span>
+                        <i class="fas fa-chevron-right icon-arrow"></i>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" onclick="showUsers()">
+                        <i class="fas fa-users icon-left"></i>
+                        <span class="link-text">Users</span>
+                        <i class="fas fa-chevron-right icon-arrow"></i>
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a href="#" onclick="showSettings()">
+                        <i class="fas fa-cogs icon-left"></i>
+                        <span class="link-text">Settings</span>
+                        <i class="fas fa-chevron-right icon-arrow"></i>
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <i class="fas fa-circle status-dot"></i>
+                    <span class="status-text">System Online</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-wrapper">
+            
+            <!-- HEADER -->
+            <header class="top-header">
+                <div class="header-left">
+                    <div class="menu-toggle" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                    <div class="page-title" id="pageTitle">Dashboard</div>
+                </div>
+                
+                <div class="header-right">
+                    <!-- Notifications -->
+                    <div class="notification-icon" id="notificationIcon">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge">3</span>
+                    </div>
+
+                    <!-- User Menu -->
+                    <div class="user-menu">
+                        <!-- BACKEND: Populate from /users/me endpoint -->
+                        <div class="user-details">
+                            <h4 id="userEmail">admin@DemoCompany.io</h4>
+                            <span id="userRole">CompanyAdmin</span>
+                        </div>
+                        <div class="user-avatar" id="userAvatar">
+                            <i class="far fa-user"></i>
+                            <i class="fas fa-caret-down"></i>
+                        </div>
+
+                        <!-- PROFILE DROPDOWN -->
+                        <div class="user-dropdown" id="userDropdown">
+                            <div class="dropdown-header">
+                                <div class="dropdown-avatar">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div>
+                                    <h4 id="dropdownUserEmail">admin@DemoCompany.io</h4>
+                                    <span id="dropdownUserRole">CompanyAdmin</span>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-user"></i> My Profile
+                            </a>
+                            <a href="#" class="dropdown-item">
+                                <i class="fas fa-cog"></i> Account Settings
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item logout-item" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CONTENT AREA -->
+            <div class="content-area">
+                
+                <!-- VIEW 1: DASHBOARD (KPIs & Charts) -->
+                <div id="dashboard-view">
+                    
+                    <!-- Date Filter -->
+                    <div class="filter-container">
+                        <div class="filter-box">
+                            <span class="filter-label">Date Range</span>
+                            <div class="filter-display">
+                                <i class="far fa-calendar-alt"></i> 
+                                <span id="dateRange">Last 7 Days</span>
+                            </div>
+                        </div>
+                        <div class="filter-box">
+                            <span class="filter-label">Location</span>
+                            <div class="filter-display">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span id="locationFilter">All Locations</span>
+                            </div>
+                        </div>
+                        <div class="filter-box">
+                            <span class="filter-label">Camera Status</span>
+                            <div class="filter-display">
+                                <i class="fas fa-video"></i>
+                                <span id="cameraStatus">All Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI Cards -->
+                    <!-- BACKEND: Update these from /dashboard/stats endpoint -->
+                    <div class="stats-grid">
+                        <div class="stat-card bg-red">
+                            <div class="stat-icon-box">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="stat-text-box">
+                                <h6>Top Violation</h6>
+                                <h3 id="topViolation">No Helmet</h3>
+                                <p class="stat-change">↑ 12% from last week</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card bg-blue">
+                            <div class="stat-icon-box">
+                                <i class="fas fa-hand-paper"></i>
+                            </div>
+                            <div class="stat-text-box">
+                                <h6>Total Violations</h6>
+                                <h3 id="violationsCount">156</h3>
+                                <p class="stat-change">↑ 8% from last week</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card bg-bright-red">
+                            <div class="stat-icon-box">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="stat-text-box">
+                                <h6>High Priority</h6>
+                                <h3 id="highPriority">45</h3>
+                                <p class="stat-change">↓ 5% from last week</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card bg-yellow">
+                            <div class="stat-icon-box">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div class="stat-text-box">
+                                <h6>Medium Priority</h6>
+                                <h3 id="mediumPriority">78</h3>
+                                <p class="stat-change">↑ 15% from last week</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card bg-orange">
+                            <div class="stat-icon-box">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="stat-text-box">
+                                <h6>Low Priority</h6>
+                                <h3 id="lowPriority">33</h3>
+                                <p class="stat-change">→ No change</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row 1 -->
+                    <!-- BACKEND: Update chart data from /dashboard/charts endpoint -->
+                    <div class="row-2-col">
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Violations by Category</div>
+                                    <div class="card-subtitle">Top violation types detected</div>
+                                </div>
+                                <select class="select-dropdown" id="violationCategoryFilter">
+                                    <option>Last 7 Days</option>
+                                    <option>Last 30 Days</option>
+                                    <option>Last 90 Days</option>
+                                </select>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="chartViolationTypes"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Camera Activity</div>
+                                    <div class="card-subtitle">Detection activity by camera</div>
+                                </div>
+                                <select class="select-dropdown" id="cameraActivityFilter">
+                                    <option>Last 7 Days</option>
+                                    <option>Last 30 Days</option>
+                                    <option>Last 90 Days</option>
+                                </select>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="chartCameraActivity"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row 2 -->
+                    <div class="row-2-col">
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Violations by Last 7 Months</div>
+                                    <div class="card-subtitle">Monthly violation trends</div>
+                                </div>
+                                <select class="select-dropdown" id="monthlyFilter">
+                                    <option>All Violations</option>
+                                    <option>High Priority Only</option>
+                                    <option>Medium Priority Only</option>
+                                </select>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="chartMonths"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Violations by Last 7 Weeks</div>
+                                    <div class="card-subtitle">Weekly trends with forecast</div>
+                                </div>
+                                <select class="select-dropdown" id="weeklyFilter">
+                                    <option>All Violations</option>
+                                    <option>High Priority Only</option>
+                                    <option>Medium Priority Only</option>
+                                </select>
+                            </div>
+                            <div class="chart-wrapper">
+                                <canvas id="chartWeeks"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row 3 -->
+                    <div class="row-1-col">
+                        <div class="card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">24-Hour Activity Timeline</div>
+                                    <div class="card-subtitle">Hourly violation distribution</div>
+                                </div>
+                                <select class="select-dropdown" id="timelineFilter">
+                                    <option>Today</option>
+                                    <option>Yesterday</option>
+                                    <option>Last 7 Days Average</option>
+                                </select>
+                            </div>
+                            <div class="chart-wrapper small-chart">
+                                <canvas id="chartTimeline"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Violations Table -->
+                    <!-- BACKEND: Populate from /violations/recent endpoint -->
+                    <div class="row-1-col">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Recent Violations</div>
+                                <a href="#" class="view-all-link" onclick="showViolations()">View All →</a>
+                            </div>
+                            <div class="table-wrapper">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Time</th>
+                                            <th>Camera</th>
+                                            <th>Violation Type</th>
+                                            <th>Priority</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recentViolationsTable">
+                                        <tr>
+                                            <td>2 mins ago</td>
+                                            <td>Camera 01</td>
+                                            <td>No Helmet</td>
+                                            <td><span class="badge badge-high">High</span></td>
+                                            <td><span class="badge badge-new">New</span></td>
+                                            <td><button class="btn-action">View</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>5 mins ago</td>
+                                            <td>Camera 03</td>
+                                            <td>Restricted Area</td>
+                                            <td><span class="badge badge-medium">Medium</span></td>
+                                            <td><span class="badge badge-new">New</span></td>
+                                            <td><button class="btn-action">View</button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>12 mins ago</td>
+                                            <td>Camera 02</td>
+                                            <td>Loitering</td>
+                                            <td><span class="badge badge-low">Low</span></td>
+                                            <td><span class="badge badge-reviewed">Reviewed</span></td>
+                                            <td><button class="btn-action">View</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: LIVE CAMERA STREAM -->
+                <div id="camera-view" style="display: none;">
+                    <div class="card" style="height: 100%; min-height: 650px; display: flex; flex-direction: column;">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title" id="cameraTitle">Live Stream: Camera 1</div>
+                                <div class="card-subtitle">Real-time AI-powered surveillance</div>
+                            </div>
+                            <div class="camera-controls">
+                                <button class="btn-control" id="recordBtn" title="Start Recording">
+                                    <i class="fas fa-circle"></i>
+                                </button>
+                                <button class="btn-control" id="snapshotBtn" title="Take Snapshot">
+                                    <i class="fas fa-camera"></i>
+                                </button>
+                                <button class="btn-control" id="fullscreenBtn" title="Fullscreen">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- VIDEO PLAYER CONTAINER WITH CANVAS OVERLAY -->
+                        <div class="video-container" id="videoContainerWrapper">
+                            <div id="videoContainer">
+                                <!-- BACKEND: Stream from /video_feed/{camera_id} endpoint -->
+                                <img id="liveVideoFeed" 
+                                     src="" 
+                                     alt="Camera Feed"
+                                     onerror="this.src='https://via.placeholder.com/1920x1080/1f2937/ffffff?text=Camera+Offline'">
+                                
+                                <!-- Canvas for AI detection boxes -->
+                                <canvas id="detectionCanvas"></canvas>
+                            </div>
+                            
+                            <!-- Live Indicator -->
+                            <div class="live-indicator">
+                                <i class="fas fa-circle" id="liveIndicator"></i> 
+                                <span id="streamStatus">LIVE</span>
+                            </div>
+
+                            <!-- FPS Counter -->
+                            <div class="fps-counter">
+                                FPS: <span id="fpsCounter">0</span>
+                            </div>
+
+                            <!-- Detection Count -->
+                            <div class="detection-counter">
+                                <i class="fas fa-user-friends"></i>
+                                Detections: <span id="detectionCount">0</span>
+                            </div>
+
+                            <!-- Detection Legend -->
+                            <div class="detection-legend">
+                                <div class="legend-title">Detected Objects:</div>
+                                <div id="detectionLegend"></div>
+                            </div>
+                        </div>
+
+                        <!-- Camera Details -->
+                        <div class="camera-details">
+                            <div class="detail-grid">
+                                <div class="detail-item">
+                                    <i class="fas fa-network-wired"></i>
+                                    <div>
+                                        <h4>Camera IP</h4>
+                                        <p id="camIp">--</p>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-signal"></i>
+                                    <div>
+                                        <h4>Status</h4>
+                                        <p id="camStatus">Online</p>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-expand-arrows-alt"></i>
+                                    <div>
+                                        <h4>Resolution</h4>
+                                        <p id="camResolution">--</p>
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-clock"></i>
+                                    <div>
+                                        <h4>Uptime</h4>
+                                        <p id="camUptime">--</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 3: VIOLATIONS (Placeholder) -->
+                <div id="violations-view" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">All Violations</div>
+                        </div>
+                        <div class="card-body">
+                            <!-- BACKEND: Populate violations list from /violations endpoint -->
+                            <p style="text-align: center; padding: 40px; color: #9ca3af;">Violations management interface - Coming soon</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 4: ANALYTICS (Placeholder) -->
+                <div id="analytics-view" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Advanced Analytics</div>
+                        </div>
+                        <div class="card-body">
+                            <!-- BACKEND: Populate analytics from /analytics endpoint -->
+                            <p style="text-align: center; padding: 40px; color: #9ca3af;">Advanced analytics interface - Coming soon</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 5: USERS (Placeholder) -->
+                <div id="users-view" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">User Management</div>
+                        </div>
+                        <div class="card-body">
+                            <!-- BACKEND: Populate users from /users endpoint -->
+                            <p style="text-align: center; padding: 40px; color: #9ca3af;">User management interface - Coming soon</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 6: SETTINGS (Placeholder) -->
+                <div id="settings-view" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">System Settings</div>
+                        </div>
+                        <div class="card-body">
+                            <!-- BACKEND: Settings management -->
+                            <p style="text-align: center; padding: 40px; color: #9ca3af;">Settings interface - Coming soon</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="footer">
+                    <div class="footer-content">
+                        <div>© 2025 INFOCAM. All Rights Reserved.</div>
+                        <div class="footer-links">
+                            <a href="#">Privacy Policy</a>
+                            <a href="#">Terms of Service</a>
+                            <a href="#">Support</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- JS File -->
+    <script src="script.js"></script>
+</body>
+</html>
